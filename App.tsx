@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Info, SquareCheck, Trash2, AlertTriangle } from 'lucide-react';
+import { Info, SquareCheck, Trash2, AlertTriangle, ChevronDown } from 'lucide-react';
 import { COURSES } from './data';
 import { AcademicYear, CourseCategory } from './types';
 
@@ -61,111 +61,111 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen font-sans text-slate-100 flex flex-col md:flex-row overflow-hidden bg-ite-900">
+    <div className="min-h-screen bg-ite-900 text-slate-100 flex flex-col md:flex-row font-sans selection:bg-ite-accent/30">
       
+      {/* Responsive Sidebar */}
       <Sidebar 
         totalCredits={totalCredits} 
         yearStatus={yearStatus} 
         onOpenCalculator={() => setShowCalculator(true)} 
       />
 
-      <main className="flex-1 flex flex-col h-screen overflow-hidden bg-ite-900 relative">
-        <header className="h-16 border-b border-ite-700 bg-ite-800/80 backdrop-blur-md flex items-center px-4 md:px-8 justify-between sticky top-0 z-10">
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+        {/* Desktop-only Header (Hidden on Mobile as Sidebar handles it) */}
+        <header className="hidden md:flex h-16 border-b border-ite-700 bg-ite-800/80 backdrop-blur-md items-center px-8 justify-between sticky top-0 z-40">
           <div className="flex items-center gap-2 text-slate-300">
              <Info size={18} className="text-ite-accent" />
-             <span className="text-sm hidden md:inline">اختر المواد المنجزة لتفعيل المسارات (اللون الباهت يعني المادة مغلقة)</span>
-             <span className="text-sm md:hidden">المسارات الأكاديمية</span>
+             <span className="text-sm">اختر المواد المنجزة لتفعيل المسارات (اللون الباهت يعني المادة مغلقة)</span>
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
+        <div className="p-4 md:p-8 flex flex-col gap-6">
           
-          <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          <div className="sticky top-0 md:top-16 z-30 -mx-4 px-4 bg-ite-900/95 backdrop-blur-xl md:bg-transparent md:backdrop-blur-none py-2">
+            <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          </div>
 
-          <div className="flex items-center justify-between gap-3 mb-6 px-1">
+          <div className="flex flex-wrap items-center justify-between gap-2 px-1">
              {activeTab !== 'roadmap' && (
                 <button 
                   onClick={handleSelectAllInTab}
-                  className="flex items-center gap-2 px-3 py-2 text-xs md:text-sm font-medium rounded-lg bg-ite-accent/10 text-ite-accent border border-ite-accent/30 hover:bg-ite-accent hover:text-white transition-all"
+                  className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 text-xs md:text-sm font-bold rounded-xl bg-ite-accent/10 text-ite-accent border border-ite-accent/30 active:scale-95 transition-all"
                 >
                   <SquareCheck size={16} />
-                  <span>تحديد كل مواد القسم</span>
+                  <span>تحديد القسم</span>
                 </button>
              )}
              <button 
                 onClick={() => setShowResetConfirm(true)}
-                className="flex items-center gap-2 px-3 py-2 text-xs md:text-sm font-medium rounded-lg transition-all mr-auto bg-rose-500/10 text-rose-400 border border-rose-500/30 hover:bg-rose-500 hover:text-white"
+                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 text-xs md:text-sm font-bold rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/30 active:scale-95 transition-all"
               >
                 <Trash2 size={16} />
-                <span>إلغاء تحديد الكل (إعادة ضبط)</span>
+                <span>ضبط الكل</span>
               </button>
           </div>
 
-          {activeTab === 'roadmap' ? (
-             <RoadmapView passedCourses={passedCourses} />
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20">
-              {COURSES.filter(c => c.category === activeTab).map(course => {
-                const prereqsMet = course.prerequisites 
-                  ? course.prerequisites.every(pId => passedCourses.has(pId))
-                  : true;
-                
-                const creditsMet = course.minCreditsRequired
-                  ? totalCredits >= course.minCreditsRequired
-                  : true;
+          <section className="pb-24">
+            {activeTab === 'roadmap' ? (
+              <RoadmapView passedCourses={passedCourses} />
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+                {COURSES.filter(c => c.category === activeTab).map(course => {
+                  const prereqsMet = course.prerequisites 
+                    ? course.prerequisites.every(pId => passedCourses.has(pId))
+                    : true;
                   
-                const isLocked = !prereqsMet || !creditsMet;
+                  const creditsMet = course.minCreditsRequired
+                    ? totalCredits >= course.minCreditsRequired
+                    : true;
+                    
+                  const isLocked = !prereqsMet || !creditsMet;
 
-                return (
-                  <CourseCard 
-                    key={course.id} 
-                    course={course} 
-                    isSelected={passedCourses.has(course.id)}
-                    isLocked={isLocked}
-                    creditsIssue={!creditsMet ? course.minCreditsRequired : undefined}
-                    onToggle={() => toggleCourse(course.id)}
-                  />
-                );
-              })}
-            </div>
-          )}
+                  return (
+                    <CourseCard 
+                      key={course.id} 
+                      course={course} 
+                      isSelected={passedCourses.has(course.id)}
+                      isLocked={isLocked}
+                      creditsIssue={!creditsMet ? course.minCreditsRequired : undefined}
+                      onToggle={() => toggleCourse(course.id)}
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </section>
         </div>
       </main>
 
-      {/* Modals & Popups */}
-      
-      {showTip && (
-        <DailyTipModal onClose={() => setShowTip(false)} />
-      )}
-
-      {showCalculator && (
-        <GradeCalculator onClose={() => setShowCalculator(false)} />
-      )}
+      {/* Modals */}
+      {showTip && <DailyTipModal onClose={() => setShowTip(false)} />}
+      {showCalculator && <GradeCalculator onClose={() => setShowCalculator(false)} />}
 
       {showResetConfirm && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-ite-800 border border-ite-700 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden relative animate-in zoom-in-95 duration-200">
-            <div className="p-6 text-center">
+        <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-ite-800 border-t md:border border-ite-700 rounded-t-3xl md:rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
+            <div className="p-8 text-center">
               <div className="w-16 h-16 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <AlertTriangle size={32} className="text-rose-500" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">هل أنت متأكد؟</h3>
-              <p className="text-slate-400 text-sm mb-6 leading-relaxed">
-                سيتم حذف جميع المواد المحددة وإعادة التطبيق إلى حالته الأولية. لا يمكن التراجع عن هذا الإجراء.
+              <h3 className="text-xl font-bold text-white mb-2">إعادة ضبط المسار؟</h3>
+              <p className="text-slate-400 text-sm mb-8 leading-relaxed">
+                سيتم مسح جميع المواد المختارة والبدء من الصفر.
               </p>
               
-              <div className="flex gap-3">
-                <button 
-                  onClick={() => setShowResetConfirm(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-ite-900 text-slate-300 border border-ite-700 hover:bg-ite-700 transition-colors font-medium"
-                >
-                  إلغاء
-                </button>
+              <div className="flex flex-col gap-3">
                 <button 
                   onClick={confirmReset}
-                  className="flex-1 py-2.5 rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition-colors font-medium shadow-lg shadow-rose-900/20"
+                  className="w-full py-3.5 rounded-xl bg-rose-600 text-white hover:bg-rose-700 active:scale-[0.98] transition-all font-bold shadow-lg shadow-rose-900/20"
                 >
-                  نعم، حذف الكل
+                  نعم، حذف كل التقدم
+                </button>
+                <button 
+                  onClick={() => setShowResetConfirm(false)}
+                  className="w-full py-3.5 rounded-xl bg-ite-900 text-slate-300 border border-ite-700 font-bold"
+                >
+                  إلغاء
                 </button>
               </div>
             </div>

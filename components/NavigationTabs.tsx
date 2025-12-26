@@ -32,30 +32,30 @@ const NavigationTabs: React.FC<NavigationTabsProps> = ({ activeTab, setActiveTab
   }, [activeTab]);
 
   return (
-    <div className="sticky top-0 z-30 bg-ite-900/95 backdrop-blur pt-2 pb-4 mb-6 -mx-4 px-4 md:mx-0 md:px-0">
+    <div className="relative">
       <div 
         ref={tabsRef}
-        className="flex items-center gap-3 overflow-x-auto pb-2 scroll-smooth [&::-webkit-scrollbar]:hidden"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="flex items-center gap-2 overflow-x-auto pb-2 scroll-smooth no-scrollbar touch-pan-x"
       >
         {categories.map(cat => (
           <button
             key={cat.id}
             data-active={activeTab === cat.id}
             onClick={() => setActiveTab(cat.id)}
-            className={`flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 whitespace-nowrap border ${
+            className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all duration-300 whitespace-nowrap border-2 active:scale-95 ${
               activeTab === cat.id 
-                ? 'bg-ite-accent text-white border-ite-accent shadow-lg shadow-ite-accent/25' 
-                : 'bg-ite-800/50 text-slate-400 border-transparent hover:bg-ite-800 hover:text-slate-200 hover:border-ite-700'
+                ? 'bg-ite-accent text-white border-ite-accent shadow-lg shadow-ite-accent/20' 
+                : 'bg-ite-800/40 text-slate-500 border-transparent hover:text-slate-300'
             }`}
           >
-            {cat.icon}
+            <span className={activeTab === cat.id ? 'animate-pulse' : ''}>{cat.icon}</span>
             {cat.label}
           </button>
         ))}
       </div>
-      <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-ite-900 to-transparent pointer-events-none md:hidden"></div>
-      <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-ite-900 to-transparent pointer-events-none md:hidden"></div>
+      {/* Scroll Indicators */}
+      <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-ite-900 to-transparent pointer-events-none opacity-50 md:hidden"></div>
+      <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-ite-900 to-transparent pointer-events-none opacity-50 md:hidden"></div>
     </div>
   );
 };
