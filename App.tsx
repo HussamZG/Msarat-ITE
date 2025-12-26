@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Info, SquareCheck, Trash2, AlertTriangle, ChevronDown } from 'lucide-react';
+import { Info, SquareCheck, Trash2, AlertTriangle } from 'lucide-react';
 import { COURSES } from './data';
 import { AcademicYear, CourseCategory } from './types';
 
@@ -61,18 +61,18 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-ite-900 text-slate-100 flex flex-col md:flex-row font-sans selection:bg-ite-accent/30">
+    <div className="min-h-screen bg-ite-900 text-slate-100 flex flex-col md:flex-row font-sans selection:bg-ite-accent/30 overflow-y-auto">
       
-      {/* Responsive Sidebar */}
+      {/* Sidebar handles its own stickiness and internal layout */}
       <Sidebar 
         totalCredits={totalCredits} 
         yearStatus={yearStatus} 
         onOpenCalculator={() => setShowCalculator(true)} 
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-h-screen overflow-x-hidden">
-        {/* Desktop-only Header (Hidden on Mobile as Sidebar handles it) */}
+      {/* Main Content Area - No fixed height on mobile to allow natural page scroll */}
+      <main className="flex-1 flex flex-col w-full overflow-x-hidden">
+        {/* Desktop-only Header */}
         <header className="hidden md:flex h-16 border-b border-ite-700 bg-ite-800/80 backdrop-blur-md items-center px-8 justify-between sticky top-0 z-40">
           <div className="flex items-center gap-2 text-slate-300">
              <Info size={18} className="text-ite-accent" />
@@ -80,36 +80,37 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        <div className="p-4 md:p-8 flex flex-col gap-6">
+        <div className="p-4 md:p-8 flex flex-col gap-6 w-full">
           
-          <div className="sticky top-0 md:top-16 z-30 -mx-4 px-4 bg-ite-900/95 backdrop-blur-xl md:bg-transparent md:backdrop-blur-none py-2">
+          {/* Navigation - Dynamic stickiness */}
+          <div className="sticky top-[72px] md:top-16 z-30 -mx-4 px-4 bg-ite-900/95 backdrop-blur-xl md:bg-transparent md:backdrop-blur-none py-2 border-b border-ite-700/30 md:border-none">
             <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-2 px-1">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-1">
              {activeTab !== 'roadmap' && (
                 <button 
                   onClick={handleSelectAllInTab}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 text-xs md:text-sm font-bold rounded-xl bg-ite-accent/10 text-ite-accent border border-ite-accent/30 active:scale-95 transition-all"
+                  className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-3 text-xs md:text-sm font-bold rounded-2xl bg-ite-accent/10 text-ite-accent border border-ite-accent/30 active:scale-95 transition-all"
                 >
-                  <SquareCheck size={16} />
-                  <span>تحديد القسم</span>
+                  <SquareCheck size={18} />
+                  <span>تحديد هذا القسم</span>
                 </button>
              )}
              <button 
                 onClick={() => setShowResetConfirm(true)}
-                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 text-xs md:text-sm font-bold rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/30 active:scale-95 transition-all"
+                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-3 text-xs md:text-sm font-bold rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/30 active:scale-95 transition-all"
               >
-                <Trash2 size={16} />
-                <span>ضبط الكل</span>
+                <Trash2 size={18} />
+                <span>تصفير التقدم</span>
               </button>
           </div>
 
-          <section className="pb-24">
+          <section className="pb-32">
             {activeTab === 'roadmap' ? (
               <RoadmapView passedCourses={passedCourses} />
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {COURSES.filter(c => c.category === activeTab).map(course => {
                   const prereqsMet = course.prerequisites 
                     ? course.prerequisites.every(pId => passedCourses.has(pId))
@@ -144,26 +145,26 @@ const App: React.FC = () => {
 
       {showResetConfirm && (
         <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-ite-800 border-t md:border border-ite-700 rounded-t-3xl md:rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
+          <div className="bg-ite-800 border-t md:border border-ite-700 rounded-t-[2.5rem] md:rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
             <div className="p-8 text-center">
               <div className="w-16 h-16 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <AlertTriangle size={32} className="text-rose-500" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">إعادة ضبط المسار؟</h3>
               <p className="text-slate-400 text-sm mb-8 leading-relaxed">
-                سيتم مسح جميع المواد المختارة والبدء من الصفر.
+                سيتم مسح جميع المواد المختارة والبدء من الصفر. هذا الإجراء لا يمكن التراجع عنه.
               </p>
               
               <div className="flex flex-col gap-3">
                 <button 
                   onClick={confirmReset}
-                  className="w-full py-3.5 rounded-xl bg-rose-600 text-white hover:bg-rose-700 active:scale-[0.98] transition-all font-bold shadow-lg shadow-rose-900/20"
+                  className="w-full py-4 rounded-2xl bg-rose-600 text-white hover:bg-rose-700 active:scale-[0.98] transition-all font-bold shadow-lg shadow-rose-900/20"
                 >
                   نعم، حذف كل التقدم
                 </button>
                 <button 
                   onClick={() => setShowResetConfirm(false)}
-                  className="w-full py-3.5 rounded-xl bg-ite-900 text-slate-300 border border-ite-700 font-bold"
+                  className="w-full py-4 rounded-2xl bg-ite-900 text-slate-300 border border-ite-700 font-bold"
                 >
                   إلغاء
                 </button>
