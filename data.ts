@@ -5,7 +5,7 @@ export const COURSES: Course[] = [
   // --- 1. COMMON CORE - GENERAL (الكتلة العامة) ---
   { id: 'GCS301', name: 'مهارات الحاسوب', credits: 4, category: 'general', unlocks: ['GTW301'], skillTypes: ['professional'] },
   { id: 'GTW301', name: 'مهارات التواصل', credits: 4, category: 'general', prerequisites: ['GCS301'], skillTypes: ['general'] },
-  { id: 'GOE301', name: 'مدخل إلى التعلم الإلكتروني', credits: 4, category: 'general', skillTypes: ['general'] }, // New
+  { id: 'GOE301', name: 'مدخل إلى التعلم الإلكتروني', credits: 4, category: 'general', skillTypes: ['general'] },
 
   // English Chain
   { id: 'GEN301', name: 'لغة إنكليزية (1)', credits: 4, category: 'general', unlocks: ['GEN401'], skillTypes: ['general'] },
@@ -33,12 +33,12 @@ export const COURSES: Course[] = [
   { id: 'BDM501', name: 'الرياضيات المتقطعة', credits: 5, category: 'basic', prerequisites: ['BLC401'], skillTypes: ['intellectual'] },
   { id: 'BPS601', name: 'الاحتمالات والإحصاء', credits: 5, category: 'basic', skillTypes: ['intellectual'] },
   { id: 'BSP501', name: 'معالجة إشارة', credits: 5, category: 'basic', skillTypes: ['intellectual'] },
-  { id: 'BSM601', name: 'النمذجة والمحاكاة والتحقق', credits: 5, category: 'basic', skillTypes: ['intellectual'] }, // New
+  { id: 'BSM601', name: 'النمذجة والمحاكاة والتحقق', credits: 5, category: 'basic', skillTypes: ['intellectual'] },
 
   // Hardware Logic Chain
   { id: 'BAS401', name: 'بنى جبرية', credits: 5, category: 'basic', unlocks: ['BLC401'], skillTypes: ['intellectual'] },
   { id: 'BLC401', name: 'الدارات المنطقية', credits: 5, category: 'basic', prerequisites: ['BAS401'], unlocks: ['BCA501', 'BDM501'], skillTypes: ['intellectual'] },
-  { id: 'BCA501', name: 'بنيان الحاسوب (1)', credits: 5, category: 'basic', prerequisites: ['BLC401'], unlocks: ['NCA601'], skillTypes: ['intellectual'] },
+  { id: 'BCA501', name: 'بنيان الحاسوب (1)', credits: 5, category: 'basic', prerequisites: ['BLC401'], unlocks: ['NCA601', 'BOS501'], skillTypes: ['intellectual'] },
 
   // Programming & Systems (Common)
   { id: 'BPG401', name: 'برمجة (1)', credits: 5, category: 'specialized', unlocks: ['BPG402'], skillTypes: ['professional'] },
@@ -47,14 +47,12 @@ export const COURSES: Course[] = [
 
   { id: 'BDA501', name: 'بنى المعطيات والخوارزميات', credits: 6, category: 'specialized', prerequisites: ['BPG402'], unlocks: ['BDB501', 'BAI501', 'BAU501', 'BCG601', 'SDA601', 'SDE601'], skillTypes: ['professional'] },
   { id: 'BDB501', name: 'نظم قواعد البيانات (1)', credits: 5, category: 'specialized', prerequisites: ['BDA501'], unlocks: ['SDB601', 'BIS601'], skillTypes: ['professional'] },
-  { id: 'BDBL501', name: 'مخبر قواعد البيانات (1)', credits: 2, category: 'specialized', prerequisites: ['BDA501'], skillTypes: ['professional'] },
-
-  { id: 'BOS501', name: 'نظم التشغيل (1)', credits: 5, category: 'specialized', prerequisites: ['BPG402'], unlocks: ['NOS601', 'BIS601'], skillTypes: ['professional'] },
-  { id: 'BOSL501', name: 'مخبر نظم التشغيل (1)', credits: 2, category: 'specialized', prerequisites: ['BOS501'], skillTypes: ['professional'] },
+  
+  { id: 'BOS501', name: 'نظم التشغيل (1)', credits: 5, category: 'specialized', prerequisites: ['BPG402', 'BCA501'], unlocks: ['NOS601', 'BIS601'], skillTypes: ['professional'] },
 
   { id: 'BWP401', name: 'برمجة الويب (1)', credits: 5, category: 'specialized', prerequisites: ['BPG402'], unlocks: ['BWP501'], skillTypes: ['professional'] },
   { id: 'BWP501', name: 'برمجة الويب (2)', credits: 5, category: 'specialized', prerequisites: ['BWP401'], unlocks: ['SSW601'], skillTypes: ['professional'] },
-  { id: 'BMP601', name: 'برمجة تطبيقات النقال', credits: 6, category: 'specialized', prerequisites: ['BPG402'], skillTypes: ['professional'] }, // New
+  { id: 'BMP601', name: 'برمجة تطبيقات النقال', credits: 6, category: 'specialized', prerequisites: ['BPG402'], skillTypes: ['professional'] },
 
   { id: 'BTS501', name: 'نظم الاتصالات', credits: 5, category: 'basic', unlocks: ['BNT501'], skillTypes: ['intellectual'] },
   { id: 'BNT501', name: 'الشبكات الحاسوبية (1)', credits: 5, category: 'specialized', prerequisites: ['BTS501'], unlocks: ['BIS601', 'NNT601'], skillTypes: ['professional'] },
@@ -62,10 +60,6 @@ export const COURSES: Course[] = [
   { id: 'BAU501', name: 'أوتومات ولغات صورية', credits: 5, category: 'basic', prerequisites: ['BDA501'], unlocks: ['BCM601'], skillTypes: ['intellectual'] },
   { id: 'BCM601', name: 'المترجمات', credits: 6, category: 'specialized', prerequisites: ['BAU501'], unlocks: ['SCP601'], skillTypes: ['intellectual'] },
   { id: 'BCG601', name: 'البيانيات', credits: 5, category: 'specialized', prerequisites: ['BDA501'], skillTypes: ['professional'] },
-  { id: 'BMM601', name: 'نظم الوسائط المتعددة', credits: 5, category: 'specialized', skillTypes: ['professional'] }, // New
-
-  // Advanced Basic
-  { id: 'BID601', name: 'تحليل وتصميم نظم المعلومات', credits: 5, category: 'specialized', skillTypes: ['professional'] }, // New
   
   // --- 4. TRACKS (SE, AI, SCN) ---
 
@@ -73,55 +67,26 @@ export const COURSES: Course[] = [
   { id: 'BSE601', name: 'هندسة البرمجيات (1)', credits: 6, category: 'specialized', prerequisites: ['BPG601'], unlocks: ['SSE602', 'SSQ601'], skillTypes: ['professional'], track: 'SE' },
   { id: 'SSE602', name: 'هندسة البرمجيات (2)', credits: 6, category: 'specialized', prerequisites: ['BSE601'], skillTypes: ['professional'], track: 'SE' },
   { id: 'SDA601', name: 'بنى المعطيات (2)', credits: 6, category: 'specialized', prerequisites: ['BDA501'], skillTypes: ['professional'], track: 'SE' },
-  { id: 'SAD601', name: 'تحليل وتصميم الخوارزميات', credits: 6, category: 'specialized', skillTypes: ['intellectual'], track: 'SE' },
-  { id: 'SDB601', name: 'نظم قواعد البيانات (2)', credits: 5, category: 'specialized', prerequisites: ['BDB501'], unlocks: ['SDBL601'], skillTypes: ['professional'], track: 'SE' },
-  { id: 'SDBL601', name: 'مخبر قواعد البيانات (2)', credits: 2, category: 'specialized', prerequisites: ['SDB601'], skillTypes: ['professional'], track: 'SE' },
-  { id: 'SCP601', name: 'مشروع مترجمات', credits: 6, category: 'specialized', prerequisites: ['BCM601'], skillTypes: ['professional'], track: 'SE' }, // New
-  { id: 'SSW601', name: 'الويب الدلالي', credits: 6, category: 'specialized', prerequisites: ['BWP501'], skillTypes: ['intellectual'], track: 'SE' }, // Shared SE/AI
-  { id: 'SIR601', name: 'استرجاع المعلومات', credits: 6, category: 'specialized', skillTypes: ['intellectual'], track: 'SE' }, // Shared SE/AI
-  // SE Sub-tracks
-  { id: 'SDE601', name: 'تنقيب البيانات', credits: 6, category: 'specialized', prerequisites: ['BDA501'], skillTypes: ['intellectual'], track: 'SE' }, // DS
-  { id: 'DDV601', name: 'التمثيل المرئي للبيانات', credits: 6, category: 'specialized', skillTypes: ['professional'], track: 'SE' }, // DS
-  { id: 'DOB601', name: 'البيانات المنطقية والبيانات الضخمة', credits: 6, category: 'specialized', skillTypes: ['intellectual'], track: 'SE' }, // New DS
-  { id: 'DSA601', name: 'الإحصاء وتحليل البيانات', credits: 6, category: 'specialized', skillTypes: ['intellectual'], track: 'SE' }, // New DS
-  { id: 'DPD601', name: 'برمجية خاصة بعلم البيانات', credits: 6, category: 'specialized', skillTypes: ['professional'], track: 'SE' }, // New DS
-  { id: 'DBD601', name: 'مواضيع متقدمة في البيانات الضخمة', credits: 6, category: 'specialized', skillTypes: ['intellectual'], track: 'SE' }, // New DS
-  
-  { id: 'SSQ601', name: 'جودة البرمجيات', credits: 6, category: 'specialized', prerequisites: ['BSE601'], skillTypes: ['professional'], track: 'SE' }, // SD
-  { id: 'DNL601', name: 'قواعد بيانات NoSQL', credits: 6, category: 'specialized', skillTypes: ['professional'], track: 'SE' }, // SD
+  { id: 'SDB601', name: 'نظم قواعد البيانات (2)', credits: 5, category: 'specialized', prerequisites: ['BDB501'], skillTypes: ['professional'], track: 'SE' },
+  { id: 'SCP601', name: 'مشروع مترجمات', credits: 6, category: 'specialized', prerequisites: ['BCM601'], skillTypes: ['professional'], track: 'SE' },
+  { id: 'SSW601', name: 'الويب الدلالي', credits: 6, category: 'specialized', prerequisites: ['BWP501'], skillTypes: ['intellectual'], track: 'SE' },
+  { id: 'SDE601', name: 'تنقيب البيانات', credits: 6, category: 'specialized', prerequisites: ['BDA501'], skillTypes: ['intellectual'], track: 'SE' },
+  { id: 'SSQ601', name: 'جودة البرمجيات', credits: 6, category: 'specialized', prerequisites: ['BSE601'], skillTypes: ['professional'], track: 'SE' },
 
   // -> AI Track (Artificial Intelligence)
   { id: 'BAI501', name: 'الذكاء الصنعي', credits: 6, category: 'specialized', prerequisites: ['BDA501'], unlocks: ['BIA601', 'ANN601', 'AML601', 'AES601', 'ACV601', 'ANL601'], skillTypes: ['intellectual'], track: 'AI' },
-  { id: 'BIA601', name: 'الخوارزميات الذكية', credits: 6, category: 'specialized', prerequisites: ['BAI501'], skillTypes: ['intellectual'], track: 'AI' },
   { id: 'ANN601', name: 'الشبكات العصبونية', credits: 6, category: 'specialized', prerequisites: ['BAI501'], skillTypes: ['intellectual'], track: 'AI' },
-  { id: 'ANL601', name: 'معالجة اللغات الطبيعية', credits: 6, category: 'specialized', prerequisites: ['BAI501'], skillTypes: ['intellectual'], track: 'AI' },
-  { id: 'AES601', name: 'النظم الخبيرة', credits: 6, category: 'specialized', prerequisites: ['BAI501'], skillTypes: ['intellectual'], track: 'AI' }, // IS
-  { id: 'AVR601', name: 'الواقع الافتراضي', credits: 6, category: 'specialized', skillTypes: ['professional'], track: 'AI' }, // IS
-  { id: 'AIP601', name: 'معالجة الصورة الرقمية', credits: 6, category: 'specialized', unlocks: ['ACV601'], skillTypes: ['professional'], track: 'AI' },
-  { id: 'ACV601', name: 'الرؤية الحاسوبية', credits: 6, category: 'specialized', prerequisites: ['BAI501', 'AIP601'], skillTypes: ['intellectual'], track: 'AI' },
-  { id: 'AML601', name: 'تعلم الآلة', credits: 6, category: 'specialized', prerequisites: ['BAI501'], unlocks: ['MDL601'], skillTypes: ['intellectual'], track: 'AI' }, // ML
-  { id: 'MDL601', name: 'التعلم العميق', credits: 6, category: 'specialized', prerequisites: ['AML601'], skillTypes: ['intellectual'], track: 'AI' }, // ML
-  { id: 'MBC601', name: 'إنترنت الأشياء وسلاسل الكتل', credits: 6, category: 'specialized', skillTypes: ['professional'], track: 'AI' }, // New
-  { id: 'MDA601', name: 'تحليل البيانات الضخمة', credits: 6, category: 'specialized', skillTypes: ['intellectual'], track: 'AI' }, // New
+  { id: 'AML601', name: 'تعلم الآلة', credits: 6, category: 'specialized', prerequisites: ['BAI501'], unlocks: ['MDL601'], skillTypes: ['intellectual'], track: 'AI' },
+  { id: 'MDL601', name: 'التعلم العميق', credits: 6, category: 'specialized', prerequisites: ['AML601'], skillTypes: ['intellectual'], track: 'AI' },
 
   // -> SCN Track (Networks & Systems)
-  { id: 'NOS601', name: 'نظم التشغيل (2)', credits: 5, category: 'specialized', prerequisites: ['BOS501'], unlocks: ['NDS601', 'NOSL601'], skillTypes: ['professional'], track: 'SCN' },
-  { id: 'NOSL601', name: 'مخبر نظم التشغيل (2)', credits: 2, category: 'specialized', prerequisites: ['NOS601'], skillTypes: ['professional'], track: 'SCN' },
+  { id: 'NOS601', name: 'نظم التشغيل (2)', credits: 5, category: 'specialized', prerequisites: ['BOS501'], unlocks: ['NDS601'], skillTypes: ['professional'], track: 'SCN' },
   { id: 'NCA601', name: 'بنيان الحاسوب (2)', credits: 6, category: 'specialized', prerequisites: ['BCA501'], skillTypes: ['intellectual'], track: 'SCN' },
   { id: 'NNT601', name: 'شبكات (2)', credits: 6, category: 'specialized', prerequisites: ['BNT501'], skillTypes: ['professional'], track: 'SCN' },
-  { id: 'NNP601', name: 'برمجة التطبيقات الشبكية', credits: 6, category: 'specialized', prerequisites: ['BNT501'], skillTypes: ['professional'], track: 'SCN' },
-  { id: 'NNS601', name: 'خدمات شبكية', credits: 6, category: 'specialized', prerequisites: ['BNT501'], skillTypes: ['professional'], track: 'SCN' },
-  { id: 'NNM601', name: 'إدارة الشبكات', credits: 6, category: 'specialized', prerequisites: ['BNT501'], skillTypes: ['professional'], track: 'SCN' },
   { id: 'NSS601', name: 'أمن الشبكات', credits: 6, category: 'specialized', prerequisites: ['BIS601'], skillTypes: ['professional'], track: 'SCN' },
   { id: 'NDS601', name: 'النظم الموزعة والسحابية', credits: 6, category: 'specialized', prerequisites: ['NOS601'], skillTypes: ['professional'], track: 'SCN' },
-  { id: 'NRT601', name: 'نظم الزمن الحقيقي', credits: 6, category: 'specialized', skillTypes: ['professional'], track: 'SCN' },
-  { id: 'CSM601', name: 'إدارة الأمن', credits: 6, category: 'specialized', skillTypes: ['professional'], track: 'SCN' }, // CS
-  { id: 'CIR601', name: 'الاستجابة للأزمات الأمنية', credits: 6, category: 'specialized', skillTypes: ['professional'], track: 'SCN' }, // CS
-  { id: 'CCR601', name: 'نظم التعمية', credits: 6, category: 'specialized', skillTypes: ['intellectual'], track: 'SCN' }, // New
-  { id: 'CEH601', name: 'الاختراق الأخلاقي', credits: 6, category: 'specialized', skillTypes: ['professional'], track: 'SCN' }, // New
-  { id: 'CSG601', name: 'أمن النظم التشغيلية', credits: 6, category: 'specialized', skillTypes: ['professional'], track: 'SCN' }, // New
 
-  // --- 5. PROJECTS & CAPSTONE (المشاريع السيادية) ---
+  // --- 5. PROJECTS & CAPSTONE ---
   { 
     id: 'BIS601', 
     name: 'أمن نظم المعلومات', 

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Info, SquareCheck, Trash2, AlertTriangle } from 'lucide-react';
+import { Info, SquareCheck, Trash2, AlertTriangle, Heart } from 'lucide-react';
 import { COURSES } from './data';
 import { AcademicYear, CourseCategory } from './types';
 
@@ -107,7 +107,7 @@ const App: React.FC = () => {
                 </button>
             </div>
 
-            <section className="pb-40">
+            <section className="pb-10">
               {activeTab === 'roadmap' ? (
                 <RoadmapView passedCourses={passedCourses} />
               ) : (
@@ -137,6 +137,23 @@ const App: React.FC = () => {
                 </div>
               )}
             </section>
+
+            {/* Simple Branded Footer */}
+            <footer className="mt-10 py-12 border-t border-ite-800/50 flex flex-col items-center justify-center gap-3">
+               <div className="flex items-center gap-2 text-slate-500 text-xs font-bold opacity-80">
+                 <span>صنع بكل</span>
+                 <Heart size={14} className="text-rose-500 fill-rose-500/20" />
+                 <span>لطلاب ITE</span>
+                 <span className="w-1 h-1 bg-ite-700 rounded-full mx-1"></span>
+                 <span>2025</span>
+               </div>
+               <div className="text-[10px] text-slate-400 font-black tracking-[0.2em] uppercase flex items-center gap-2">
+                 برمجة وتطوير 
+                 <span className="text-ite-accent hover:text-white transition-all duration-300 cursor-default px-2 py-0.5 bg-ite-accent/5 rounded-md border border-ite-accent/10">
+                   &lt;SHTAYER/&gt;
+                 </span>
+               </div>
+            </footer>
           </div>
         </div>
       </main>
