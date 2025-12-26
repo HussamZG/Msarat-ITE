@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { BookOpen, Cpu, Code, BrainCircuit, Network, Award, Map as MapIcon, ArrowRight, CircleCheck, Lock, ChevronRight } from 'lucide-react';
 import { COURSES } from '../data';
@@ -78,7 +79,8 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ passedCourses }) => {
   ];
 
   const currentTotalCredits = useMemo(() => {
-    return Array.from(passedCourses).reduce((sum, id) => {
+    // Added type annotation for 'sum' to fix TypeScript error in line 83
+    return Array.from(passedCourses).reduce((sum: number, id) => {
        const c = COURSES.find(x => x.id === id);
        return sum + (c?.credits || 0);
     }, 0);
