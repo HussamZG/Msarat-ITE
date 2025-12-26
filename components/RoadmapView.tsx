@@ -78,25 +78,26 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ passedCourses }) => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-ite-800/30 p-4 md:p-6 rounded-3xl border border-ite-700">
-        <h3 className="text-white font-bold mb-4 flex items-center gap-3 text-lg">
-           <MapIcon size={24} className="text-ite-accent" />
-           خريطة الأسبقيات
+      <div className="bg-ite-800/30 p-2 md:p-6 rounded-3xl border border-ite-700">
+        <h3 className="text-white font-black mb-6 flex items-center gap-3 text-xl px-4 md:px-0 pt-4 md:pt-0">
+           <MapIcon size={28} className="text-ite-accent" />
+           خريطة الأسبقيات الأكاديمية
         </h3>
         
-        <div className="space-y-6">
+        <div className="space-y-8">
           {sections.map((section, idx) => (
-            <div key={idx} className="bg-ite-900/40 p-4 md:p-6 rounded-3xl border border-ite-800 shadow-sm overflow-hidden">
-              <h4 className="text-slate-200 font-bold mb-6 text-sm flex items-center gap-3">
-                <div className="p-2 bg-ite-800 rounded-xl border border-ite-700">
+            <div key={idx} className="bg-ite-900/60 rounded-[2rem] border border-ite-800 shadow-sm overflow-visible">
+              <h4 className="text-slate-200 font-black p-5 text-sm flex items-center gap-3 border-b border-ite-800/50">
+                <div className="p-2.5 bg-ite-800 rounded-2xl border border-ite-700 shadow-inner">
                   {section.icon}
                 </div>
                 {section.title}
               </h4>
               
-              <div className="flex flex-col gap-6 overflow-x-auto pb-4 no-scrollbar touch-pan-x -mx-4 px-4">
+              {/* Added touch-pan-y to allow vertical scrolling even when touching the horizontal chains */}
+              <div className="flex flex-col gap-8 overflow-x-auto pb-8 pt-6 no-scrollbar snap-x snap-mandatory touch-pan-x touch-pan-y -mx-2 px-4">
                  {section.chains.map((path, pIdx) => (
-                    <div key={pIdx} className="flex items-center min-w-max p-2 rounded-2xl hover:bg-white/[0.02] transition-colors">
+                    <div key={pIdx} className="flex items-center min-w-max p-1 snap-start">
                       {path.map((courseId, cIdx) => {
                         const course = COURSES.find(c => c.id === courseId);
                         if (!course) return null;
@@ -123,19 +124,19 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ passedCourses }) => {
                         return (
                           <React.Fragment key={courseId}>
                             {cIdx > 0 && (
-                               <div className="flex items-center mx-1">
-                                 <div className={`w-6 md:w-10 h-1 rounded-full transition-all duration-500 ${
-                                    connectorStatus === 'completed' ? 'bg-ite-success shadow-[0_0_8px_rgba(16,185,129,0.4)]' :
-                                    connectorStatus === 'active' ? 'bg-ite-accent animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.4)]' :
-                                    'bg-ite-700/30'
+                               <div className="flex items-center mx-1 md:mx-2">
+                                 <div className={`w-6 md:w-12 h-1 rounded-full transition-all duration-700 ${
+                                    connectorStatus === 'completed' ? 'bg-ite-success shadow-[0_0_12px_rgba(16,185,129,0.5)]' :
+                                    connectorStatus === 'active' ? 'bg-ite-accent animate-pulse shadow-[0_0_12px_rgba(59,130,246,0.5)]' :
+                                    'bg-ite-800'
                                  }`}></div>
                                  <ChevronRight 
-                                    size={18} 
+                                    size={20} 
                                     strokeWidth={3}
-                                    className={`-ml-2 z-10 ${
+                                    className={`-ml-2.5 z-10 transition-colors duration-500 ${
                                        connectorStatus === 'completed' ? 'text-ite-success' :
                                        connectorStatus === 'active' ? 'text-ite-accent' :
-                                       'text-ite-700/30'
+                                       'text-ite-800'
                                     }`}
                                  />
                                </div>
@@ -143,28 +144,33 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ passedCourses }) => {
                             
                             <div className={`
                               relative flex flex-col items-center justify-center
-                              w-28 h-20 p-2 rounded-2xl border-2 transition-all duration-300
+                              w-32 h-24 md:w-36 md:h-28 p-3 rounded-[1.75rem] border-2 transition-all duration-500
                               ${isDone 
-                                ? 'bg-ite-success/10 border-ite-success text-ite-success' 
+                                ? 'bg-ite-success/10 border-ite-success text-ite-success shadow-lg shadow-ite-success/5' 
                                 : isNext
-                                  ? 'bg-ite-accent/10 border-ite-accent text-white scale-105 z-10 shadow-lg shadow-ite-accent/20'
-                                  : 'bg-ite-800 border-ite-700 text-slate-600 opacity-60'
+                                  ? 'bg-ite-accent/20 border-ite-accent text-white scale-105 z-10 shadow-2xl shadow-ite-accent/30 ring-4 ring-ite-accent/5'
+                                  : 'bg-ite-800/80 border-ite-700 text-slate-500 opacity-50'
                               }
                             `}>
-                              <span className="text-[9px] font-mono font-bold opacity-80 mb-0.5">{course.id}</span>
-                              <span className="text-center font-bold text-[10px] leading-tight">
+                              <span className="text-[10px] font-mono font-black opacity-80 mb-1 tracking-tighter">{course.id}</span>
+                              <span className="text-center font-black text-[11px] md:text-xs leading-tight line-clamp-2 px-1">
                                 {course.name}
                               </span>
                               
                               {isDone && (
-                                <div className="absolute -top-1.5 -right-1.5 bg-ite-900 rounded-full p-0.5 border border-ite-success shadow-lg">
-                                  <CircleCheck size={14} className="text-ite-success fill-ite-success/20" />
+                                <div className="absolute -top-2 -right-2 bg-ite-900 rounded-full p-1 border-2 border-ite-success shadow-xl">
+                                  <CircleCheck size={16} className="text-ite-success fill-ite-success/20" />
                                 </div>
                               )}
                               {isLocked && !isDone && (
-                                <div className="absolute -top-1.5 -right-1.5 bg-ite-900 rounded-full p-0.5 border border-slate-700">
-                                  <Lock size={12} className="text-slate-600" />
+                                <div className="absolute -top-2 -right-2 bg-ite-900 rounded-full p-1 border-2 border-ite-700 shadow-lg">
+                                  <Lock size={14} className="text-slate-600" />
                                 </div>
+                              )}
+                              
+                              {/* Glowing indicator for 'Next' courses */}
+                              {isNext && (
+                                <div className="absolute -bottom-1 w-8 h-1 bg-ite-accent rounded-full animate-bounce"></div>
                               )}
                             </div>
                           </React.Fragment>
