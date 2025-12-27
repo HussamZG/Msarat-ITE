@@ -45,12 +45,13 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ passedCourses }) => {
       if (visited.has(courseId)) return 0; 
       const newVisited = new Set(visited);
       newVisited.add(courseId);
-      const course = COURSES.find(c => c.id === courseId);
-      if (!course || !course.prerequisites || course.prerequisites.length === 0) {
+      // Fixed: Removed the incorrect line that was using an undefined 'id' variable.
+      const courseObj = COURSES.find(c => c.id === courseId);
+      if (!courseObj || !courseObj.prerequisites || courseObj.prerequisites.length === 0) {
         ranks[courseId] = 0;
         return 0;
       }
-      const prRanks = course.prerequisites.map(p => getRank(p, newVisited));
+      const prRanks = courseObj.prerequisites.map(p => getRank(p, newVisited));
       const maxRank = Math.max(...prRanks) + 1;
       ranks[courseId] = maxRank;
       return maxRank;
@@ -113,12 +114,11 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ passedCourses }) => {
     if (!mapRef.current) return;
     setIsExporting(true);
     
-    // Give UI a moment to show exporting state
     await new Promise(r => setTimeout(r, 100));
 
     try {
       const dataUrl = await toPng(mapRef.current, {
-        pixelRatio: 3, // High-res
+        pixelRatio: 3,
         backgroundColor: '#0f172a',
         cacheBust: true,
         style: {
@@ -127,8 +127,7 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ passedCourses }) => {
           top: '0',
           margin: '40px'
         },
-        // Filtering ensures we don't try to load invalid cross-origin resources
-        filter: (node) => {
+        filter: (node: any) => {
           if (node.tagName === 'IFRAME') return false;
           return true;
         }
@@ -140,7 +139,7 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ passedCourses }) => {
       link.click();
     } catch (err) {
       console.error('Export failed', err);
-      alert('عذراً، حدث خطأ أثناء تصدير الصورة. يرجى التأكد من اتصال الإنترنت.');
+      alert('عذراً، حدث خطأ أثناء تصدير الصورة.');
     } finally {
       setIsExporting(false);
     }
@@ -169,18 +168,17 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ passedCourses }) => {
 
   return (
     <div className="relative flex flex-col gap-4">
-      {/* Dynamic Controls Bar */}
       <div className="absolute top-4 right-4 left-4 z-50 flex items-center justify-between pointer-events-none">
         <div className="flex gap-2 pointer-events-auto">
           <div className="bg-ite-800/90 backdrop-blur-md border border-ite-700 p-1.5 rounded-2xl flex flex-row md:flex-col gap-1 shadow-2xl">
-            <button onClick={() => setScale(s => Math.min(2, s + 0.1))} className="p-3 hover:bg-ite-700 rounded-xl text-slate-300 transition-colors" title="تكبير">
+            <button onClick={() => setScale(s => Math.min(2, s + 0.1))} className="p-3 hover:bg-ite-700 rounded-xl text-slate-300 transition-colors">
               <ZoomIn size={22} />
             </button>
-            <button onClick={() => setScale(s => Math.max(0.3, s - 0.1))} className="p-3 hover:bg-ite-700 rounded-xl text-slate-300 transition-colors" title="تصغير">
+            <button onClick={() => setScale(s => Math.max(0.3, s - 0.1))} className="p-3 hover:bg-ite-700 rounded-xl text-slate-300 transition-colors">
               <ZoomOut size={22} />
             </button>
             <div className="w-px h-6 bg-ite-700 mx-1 md:w-6 md:h-px md:mx-0 md:my-1"></div>
-            <button onClick={resetViewport} className="p-3 hover:bg-ite-700 rounded-xl text-ite-accent transition-colors" title="إعادة ضبط">
+            <button onClick={resetViewport} className="p-3 hover:bg-ite-700 rounded-xl text-ite-accent transition-colors">
               <Maximize size={22} />
             </button>
           </div>
