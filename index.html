@@ -27,6 +27,7 @@
             },
             animation: {
               'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+              'neon-glow': 'neon-glow 2s ease-in-out infinite',
             },
             keyframes: {
               shake: {
@@ -34,6 +35,16 @@
                 '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
                 '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
                 '40%, 60%': { transform: 'translate3d(4px, 0, 0)' },
+              },
+              'neon-glow': {
+                '0%, 100%': { 
+                  opacity: '0.8',
+                  textShadow: '0 0 5px rgba(59, 130, 246, 0.5), 0 0 10px rgba(59, 130, 246, 0.3)'
+                },
+                '50%': { 
+                  opacity: '1',
+                  textShadow: '0 0 10px rgba(59, 130, 246, 0.8), 0 0 20px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4)'
+                }
               }
             }
           }

@@ -1,5 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Info, SquareCheck, Trash2, AlertTriangle, Heart, Lock, AlertCircle } from 'lucide-react';
+import { 
+  Info, SquareCheck, Trash2, AlertTriangle, Heart, Lock, 
+  AlertCircle, MessageCircle, Facebook, Send, X, ExternalLink 
+} from 'lucide-react';
 import { COURSES } from './data';
 import { AcademicYear, CourseCategory, Course } from './types';
 
@@ -17,13 +20,42 @@ interface Toast {
   visible: boolean;
 }
 
+const STORAGE_KEYS = {
+  PASSED_COURSES: 'masar_ite_passed_courses',
+  ACTIVE_TAB: 'masar_ite_active_tab'
+};
+
 const App: React.FC = () => {
-  const [passedCourses, setPassedCourses] = useState<Set<string>>(new Set());
-  const [activeTab, setActiveTab] = useState<CourseCategory | 'roadmap'>('general');
+  const [passedCourses, setPassedCourses] = useState<Set<string>>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.PASSED_COURSES);
+    if (saved) {
+      try {
+        return new Set(JSON.parse(saved));
+      } catch (e) {
+        return new Set();
+      }
+    }
+    return new Set();
+  });
+
+  const [activeTab, setActiveTab] = useState<CourseCategory | 'roadmap'>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.ACTIVE_TAB);
+    return (saved as CourseCategory | 'roadmap') || 'general';
+  });
+
   const [showTip, setShowTip] = useState(true);
   const [showCalculator, setShowCalculator] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const [toast, setToast] = useState<Toast>({ message: '', type: 'info', visible: false });
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.PASSED_COURSES, JSON.stringify(Array.from(passedCourses)));
+  }, [passedCourses]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.ACTIVE_TAB, activeTab);
+  }, [activeTab]);
 
   const totalCredits = useMemo(() => {
     return Array.from(passedCourses).reduce((sum: number, id) => {
@@ -99,8 +131,9 @@ const App: React.FC = () => {
 
   const confirmReset = () => {
     setPassedCourses(new Set());
+    localStorage.removeItem(STORAGE_KEYS.PASSED_COURSES);
     setShowResetConfirm(false);
-    showNotification('تمت إعادة ضبط المسار الأكاديمي', 'info');
+    showNotification('تمت إعادة ضبط المسار الأكاديمي وتفريغ الذاكرة', 'info');
   };
 
   return (
@@ -116,7 +149,7 @@ const App: React.FC = () => {
         <header className="hidden md:flex h-16 border-b border-ite-700 bg-ite-800/80 backdrop-blur-md items-center px-8 justify-between sticky top-0 z-50">
           <div className="flex items-center gap-2 text-slate-300">
              <Info size={18} className="text-ite-accent" />
-             <span className="text-sm font-medium">اختر المواد المنجزة لتفعيل المسارات والأسبقيات الأكاديمية.</span>
+             <span className="text-sm font-medium">بياناتك تُحفظ تلقائياً في متصفحك الحالي.</span>
           </div>
         </header>
 
@@ -186,7 +219,7 @@ const App: React.FC = () => {
               )}
             </section>
 
-            <footer className="mt-10 py-12 border-t border-ite-800/50 flex flex-col items-center justify-center gap-3">
+            <footer className="mt-10 py-12 border-t border-ite-800/50 flex flex-col items-center justify-center gap-4">
                <div className="flex items-center gap-2 text-slate-500 text-xs font-bold opacity-80">
                  <span>صنع بكل</span>
                  <Heart size={14} className="text-rose-500 fill-rose-500/20" />
@@ -194,18 +227,87 @@ const App: React.FC = () => {
                  <span className="w-1 h-1 bg-ite-700 rounded-full mx-1"></span>
                  <span>2025</span>
                </div>
-               <div className="text-[10px] text-slate-400 font-black tracking-[0.2em] uppercase flex items-center gap-2">
-                 برمجة وتطوير 
-                 <span className="text-ite-accent hover:text-white transition-all duration-300 cursor-default px-2 py-0.5 bg-ite-accent/5 rounded-md border border-ite-accent/10">
-                   &lt;SHTAYER/&gt;
-                 </span>
+               
+               <div className="text-[10px] text-slate-400 font-black tracking-[0.2em] uppercase flex items-center gap-2" dir="ltr">
+                 Developed by 
+                 <button 
+                  onClick={() => setShowContact(true)}
+                  className="text-ite-accent hover:text-white transition-all duration-300 px-3 py-1 bg-ite-accent/5 rounded-md border border-ite-accent/20 hover:border-ite-accent/50 active:scale-95 group relative overflow-hidden"
+                 >
+                   <span className="relative z-10 animate-neon-glow">&lt;SHTAYER/&gt;</span>
+                   <span className="absolute inset-0 bg-ite-accent/10 blur-md rounded-md opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                 </button>
                </div>
             </footer>
           </div>
         </div>
       </main>
 
-      {/* Toast Notification - Updated positioning for bottom-center on mobile */}
+      {/* Contact Modal */}
+      {showContact && (
+        <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
+           <div 
+             className="absolute inset-0" 
+             onClick={() => setShowContact(false)}
+           ></div>
+           
+           <div className="bg-gradient-to-br from-ite-800 to-ite-900 border border-ite-700 rounded-[2.5rem] shadow-2xl w-full max-w-sm overflow-hidden relative animate-in zoom-in-95 slide-in-from-bottom-4 duration-300">
+              <button 
+                onClick={() => setShowContact(false)}
+                className="absolute top-5 left-5 p-2 text-slate-500 hover:text-white hover:bg-white/10 rounded-full transition-all"
+              >
+                <X size={20} />
+              </button>
+
+              <div className="p-8 text-center">
+                 <div className="w-20 h-20 bg-ite-accent/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-ite-accent/20">
+                    <MessageCircle size={40} className="text-ite-accent" />
+                 </div>
+                 
+                 <h3 className="text-2xl font-black text-white mb-3">تواصل معنا</h3>
+                 <p className="text-slate-400 text-sm mb-8 leading-relaxed px-2">
+                    إذا كان لديك أي ملاحظات، اقتراحات، أو وجدت خطأ في الموقع، يسعدنا تواصلك معنا عبر إحدى المنصات التالية:
+                 </p>
+
+                 <div className="grid grid-cols-3 gap-4">
+                    <a 
+                      href="https://wa.me/963954403685" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="group flex flex-col items-center gap-2 p-4 bg-ite-900/50 rounded-2xl border border-ite-700 hover:border-ite-accent/50 transition-all active:scale-90"
+                    >
+                       <MessageCircle size={24} className="text-emerald-500 group-hover:scale-110 transition-transform" />
+                       <span className="text-[10px] font-black text-slate-500 group-hover:text-slate-300 uppercase">WhatsApp</span>
+                    </a>
+                    <a 
+                      href="https://www.facebook.com/share/17TXatekmd/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="group flex flex-col items-center gap-2 p-4 bg-ite-900/50 rounded-2xl border border-ite-700 hover:border-ite-accent/50 transition-all active:scale-90"
+                    >
+                       <Facebook size={24} className="text-blue-500 group-hover:scale-110 transition-transform" />
+                       <span className="text-[10px] font-black text-slate-500 group-hover:text-slate-300 uppercase">Facebook</span>
+                    </a>
+                    <a 
+                      href="https://t.me/Shtayer99" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="group flex flex-col items-center gap-2 p-4 bg-ite-900/50 rounded-2xl border border-ite-700 hover:border-ite-accent/50 transition-all active:scale-90"
+                    >
+                       <Send size={24} className="text-sky-400 group-hover:scale-110 transition-transform" />
+                       <span className="text-[10px] font-black text-slate-500 group-hover:text-slate-300 uppercase">Telegram</span>
+                    </a>
+                 </div>
+
+                 <div className="mt-8 pt-6 border-t border-ite-700/50 text-[10px] text-slate-500 font-bold flex items-center justify-center gap-2 italic">
+                    <ExternalLink size={12} />
+                    بانتظار مساهمتكم في تطوير المنصة
+                 </div>
+              </div>
+           </div>
+        </div>
+      )}
+
       {toast.visible && (
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[350] w-[calc(100%-2.5rem)] md:w-max max-w-lg animate-in slide-in-from-bottom-10 fade-in duration-400 ease-out pointer-events-none">
            <div className={`

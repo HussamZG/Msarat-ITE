@@ -7,12 +7,12 @@ export const COURSES: Course[] = [
   { id: 'GTW301', name: 'مهارات التواصل', credits: 4, category: 'general', prerequisites: ['GCS301'], skillTypes: ['general'] },
   { id: 'GOE301', name: 'مدخل إلى التعلم الإلكتروني', credits: 4, category: 'general', skillTypes: ['general'] },
 
-  // English Chain
-  { id: 'GEN301', name: 'لغة إنكليزية (1)', credits: 4, category: 'general', unlocks: ['GEN401'], skillTypes: ['general'] },
-  { id: 'GEN401', name: 'لغة إنكليزية (2)', credits: 4, category: 'general', prerequisites: ['GEN301'], unlocks: ['GEN501'], skillTypes: ['general'] },
-  { id: 'GEN501', name: 'لغة إنكليزية (3)', credits: 4, category: 'general', prerequisites: ['GEN401'], unlocks: ['GEN502'], skillTypes: ['general'] },
-  { id: 'GEN502', name: 'لغة إنكليزية (4)', credits: 4, category: 'general', prerequisites: ['GEN501'], unlocks: ['GEN601'], skillTypes: ['general'] },
-  { id: 'GEN601', name: 'لغة إنكليزية (5)', credits: 4, category: 'general', prerequisites: ['GEN502'], skillTypes: ['general'] },
+  // English Chain - Updated credits to 3
+  { id: 'GEN301', name: 'لغة إنكليزية (1)', credits: 3, category: 'general', unlocks: ['GEN401'], skillTypes: ['general'] },
+  { id: 'GEN401', name: 'لغة إنكليزية (2)', credits: 3, category: 'general', prerequisites: ['GEN301'], unlocks: ['GEN501'], skillTypes: ['general'] },
+  { id: 'GEN501', name: 'لغة إنكليزية (3)', credits: 3, category: 'general', prerequisites: ['GEN401'], unlocks: ['GEN502'], skillTypes: ['general'] },
+  { id: 'GEN502', name: 'لغة إنكليزية (4)', credits: 3, category: 'general', prerequisites: ['GEN501'], unlocks: ['GEN601'], skillTypes: ['general'] },
+  { id: 'GEN601', name: 'لغة إنكليزية (5)', credits: 3, category: 'general', prerequisites: ['GEN502'], skillTypes: ['general'] },
 
   // Management & Ethics
   { id: 'GMN401', name: 'أساسيات الإدارة', credits: 4, category: 'general', unlocks: ['GAC501'], skillTypes: ['general'] },
