@@ -1,15 +1,16 @@
 import React from 'react';
-import { GraduationCap, Calculator, Trophy } from 'lucide-react';
+import { GraduationCap, Calculator, Trophy, Eye, Activity } from 'lucide-react';
 import { TOTAL_GRADUATION_CREDITS } from '../data';
 import { AcademicYear } from '../types';
 
 interface SidebarProps {
   totalCredits: number;
   yearStatus: { name: AcademicYear; progress: number };
+  totalVisits: number | null;
   onOpenCalculator: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ totalCredits, yearStatus, onOpenCalculator }) => {
+const Sidebar: React.FC<SidebarProps> = ({ totalCredits, yearStatus, totalVisits, onOpenCalculator }) => {
   const percentage = Math.min(100, (totalCredits / TOTAL_GRADUATION_CREDITS) * 100);
 
   const steps = [
@@ -23,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ totalCredits, yearStatus, onOpenCalcu
 
   return (
     <>
-      {/* Mobile Top Header (Fixed Height: 72px) */}
+      {/* Mobile Top Header */}
       <div className="md:hidden sticky top-0 z-[60] h-[72px] w-full bg-ite-900 border-b border-ite-700 px-4 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 bg-ite-accent/20 rounded-2xl flex items-center justify-center border border-ite-accent/30">
@@ -55,6 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ totalCredits, yearStatus, onOpenCalcu
         </div>
 
         <div className="p-6 flex-1 flex flex-col gap-8">
+          {/* Academic Status Card */}
           <div className="bg-gradient-to-br from-ite-800 to-ite-900 rounded-3xl p-6 border border-ite-700 shadow-lg relative overflow-hidden group">
             <h2 className="text-[10px] uppercase tracking-widest text-slate-500 font-black mb-3">الوضع الأكاديمي</h2>
             <div className="text-2xl font-black text-white mb-1">{yearStatus.name}</div>
@@ -66,6 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ totalCredits, yearStatus, onOpenCalcu
             </div>
           </div>
 
+          {/* Graduation Map */}
           <div className="bg-ite-900/40 rounded-[2rem] p-6 border border-ite-700/50 relative flex flex-col items-center shadow-inner">
             <h3 className="text-[10px] font-black text-slate-500 mb-8 w-full text-center uppercase tracking-widest flex items-center justify-center gap-2">
                <Trophy size={14} className="text-yellow-500" />
@@ -84,13 +87,43 @@ const Sidebar: React.FC<SidebarProps> = ({ totalCredits, yearStatus, onOpenCalcu
             </div>
           </div>
 
-          <button 
-            onClick={onOpenCalculator}
-            className="flex items-center justify-center gap-3 w-full py-4 px-4 rounded-2xl bg-ite-accent text-white hover:bg-blue-600 active:scale-95 transition-all shadow-xl shadow-ite-accent/25 font-black text-sm mt-auto"
-          >
-            <Calculator size={20} />
-            <span>حاسبة المحصلة الذكية</span>
-          </button>
+          {/* Stats Section (Desktop) */}
+          <div className="mt-auto space-y-4">
+            <div className="bg-ite-800/50 border border-ite-700/30 rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                 <div className="flex items-center gap-2">
+                    <Activity size={14} className="text-ite-success" />
+                    <span className="text-[10px] font-black text-slate-500 uppercase">إحصائيات الزيارات</span>
+                 </div>
+                 <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 bg-ite-success rounded-full animate-pulse"></div>
+                    <span className="text-[9px] font-bold text-ite-success">LIVE</span>
+                 </div>
+              </div>
+
+              <div className="bg-ite-900/40 p-4 rounded-xl border border-ite-700/20 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-ite-accent/10 flex items-center justify-center border border-ite-accent/20">
+                    <Eye size={16} className="text-ite-accent" />
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-bold text-slate-500 uppercase">إجمالي الزيارات</div>
+                    <div className="text-lg font-black text-white leading-tight">
+                      {totalVisits !== null ? totalVisits.toLocaleString() : '...'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button 
+              onClick={onOpenCalculator}
+              className="flex items-center justify-center gap-3 w-full py-4 px-4 rounded-2xl bg-ite-accent text-white hover:bg-blue-600 active:scale-95 transition-all shadow-xl shadow-ite-accent/25 font-black text-sm"
+            >
+              <Calculator size={20} />
+              <span>حاسبة المحصلة الذكية</span>
+            </button>
+          </div>
         </div>
       </aside>
     </>
