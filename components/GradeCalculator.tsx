@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Calculator, X, CircleAlert, CircleHelp, Equal, ArrowRight, Sparkles } from 'lucide-react';
+import { Calculator, X, CircleAlert, Equal, ArrowRight, Sparkles } from 'lucide-react';
 
 interface GradeCalculatorProps {
   onClose: () => void;
@@ -31,9 +31,7 @@ const GradeCalculator: React.FC<GradeCalculatorProps> = ({ onClose }) => {
   const isHelpEligible = finalScore === 58 || finalScore === 59;
   const isPassing = isDirectPass || isHelpEligible;
 
-  // Smart Suggestions Logic
   const suggestions = useMemo(() => {
-    // If only practical is entered
     if (practical !== '' && exam === '') {
       const neededFor60 = Math.ceil((60 - (pScore * 0.3)) / 0.7);
       const neededFor58 = Math.ceil((57.0001 - (pScore * 0.3)) / 0.7);
@@ -43,7 +41,6 @@ const GradeCalculator: React.FC<GradeCalculatorProps> = ({ onClose }) => {
         help: Math.max(0, Math.min(100, neededFor58))
       };
     }
-    // If only exam is entered
     if (exam !== '' && practical === '') {
       const neededFor60 = Math.ceil((60 - (eScore * 0.7)) / 0.3);
       const neededFor58 = Math.ceil((57.0001 - (eScore * 0.7)) / 0.3);
@@ -57,23 +54,32 @@ const GradeCalculator: React.FC<GradeCalculatorProps> = ({ onClose }) => {
   }, [practical, exam, pScore, eScore]);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="bg-ite-800 border-t md:border border-ite-700 rounded-t-[2.5rem] md:rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden relative animate-in slide-in-from-bottom-4 duration-300">
-        
-        <button 
-          onClick={onClose}
-          className="absolute top-6 left-6 p-2 text-slate-500 hover:text-white hover:bg-white/10 rounded-full transition-colors z-10"
-        >
-          <X size={24} />
-        </button>
+    <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
+      {/* Background click to close */}
+      <div className="absolute inset-0" onClick={onClose}></div>
 
-        <div className="p-8">
-          <div className="flex items-center gap-3 mb-1">
+      <div className="bg-ite-800 border-t md:border border-ite-700 rounded-t-[2.5rem] md:rounded-3xl shadow-2xl w-full max-w-lg relative animate-in slide-in-from-bottom-4 duration-300 flex flex-col max-h-[92vh] md:max-h-[90vh]">
+        
+        {/* Header - Fixed to ensure close button is always visible */}
+        <div className="flex items-center justify-between p-6 pb-2 border-b border-ite-700/50 md:border-none">
+          <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-ite-accent/20 rounded-xl flex items-center justify-center">
               <Calculator className="text-ite-accent" size={24} />
             </div>
-            <h2 className="text-2xl font-black text-white">حاسبة المحصلة الذكية</h2>
+            <div>
+              <h2 className="text-xl font-black text-white">حاسبة المحصلة</h2>
+            </div>
           </div>
+          <button 
+            onClick={onClose}
+            className="p-3 text-slate-400 hover:text-white hover:bg-white/10 rounded-2xl transition-all active:scale-90"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-y-auto no-scrollbar p-6 md:p-8 pt-4">
           <p className="text-slate-400 text-sm mb-8 font-medium">حساب دقيق للمحصلة مع توقع ذكي للنجاح والمساعدة</p>
 
           <div className="space-y-6">
@@ -109,7 +115,6 @@ const GradeCalculator: React.FC<GradeCalculatorProps> = ({ onClose }) => {
               </div>
             </div>
 
-            {/* Smart Prediction Box (Muzallal / Highlighted) */}
             {suggestions && (
                <div className="bg-ite-accent/10 border-2 border-ite-accent/30 rounded-3xl p-5 animate-in zoom-in-95 duration-300">
                   <div className="flex items-center gap-2 mb-3">
@@ -139,48 +144,62 @@ const GradeCalculator: React.FC<GradeCalculatorProps> = ({ onClose }) => {
                 تُجبر المحصلة إلى أقرب رقم صحيح. درجات المساعدة ترفع الـ 58 و 59 إلى 60 تلقائياً (بحد أقصى مادتين في الفصل الدراسي الواحد).
               </p>
             </div>
-          </div>
 
-          <div className="mt-8 pt-8 border-t border-ite-700">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex flex-col">
-                <span className="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">المحصلة النهائية</span>
-                <div className="flex items-center gap-2">
-                  {isDirectPass ? (
-                    <span className="px-3 py-1 bg-ite-success/20 text-ite-success text-[10px] font-black rounded-lg border border-ite-success/30">ناجح مباشرة</span>
-                  ) : isHelpEligible ? (
-                    <span className="px-3 py-1 bg-blue-500/20 text-blue-400 text-[10px] font-black rounded-lg border border-blue-500/30">ناجح بالمساعدة</span>
-                  ) : (
-                    <span className="px-3 py-1 bg-rose-500/20 text-rose-400 text-[10px] font-black rounded-lg border border-rose-500/30">تحتاج للمزيد</span>
-                  )}
+            <div className="mt-8 pt-8 border-t border-ite-700">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex flex-col">
+                  <span className="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">المحصلة النهائية</span>
+                  <div className="flex items-center gap-2">
+                    {isDirectPass ? (
+                      <span className="px-3 py-1 bg-ite-success/20 text-ite-success text-[10px] font-black rounded-lg border border-ite-success/30">ناجح مباشرة</span>
+                    ) : isHelpEligible ? (
+                      <span className="px-3 py-1 bg-blue-500/20 text-blue-400 text-[10px] font-black rounded-lg border border-blue-500/30">ناجح بالمساعدة</span>
+                    ) : (
+                      <span className="px-3 py-1 bg-rose-500/20 text-rose-400 text-[10px] font-black rounded-lg border border-rose-500/30">تحتاج للمزيد</span>
+                    )}
+                  </div>
+                </div>
+                <div className={`text-6xl font-black font-mono transition-colors ${isPassing ? 'text-white' : 'text-slate-700'}`}>
+                  {finalScore}
                 </div>
               </div>
-              <div className={`text-6xl font-black font-mono transition-colors ${isPassing ? 'text-white' : 'text-slate-700'}`}>
-                {finalScore}
+              
+              <div className="w-full h-3 bg-ite-900 rounded-full overflow-hidden border border-ite-700/50">
+                <div 
+                  className={`h-full transition-all duration-700 ease-out ${isPassing ? 'bg-ite-success shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-ite-700'}`} 
+                  style={{ width: `${Math.min(100, finalScore)}%` }}
+                ></div>
               </div>
             </div>
-            
-            <div className="w-full h-3 bg-ite-900 rounded-full overflow-hidden border border-ite-700/50">
-              <div 
-                className={`h-full transition-all duration-700 ease-out ${isPassing ? 'bg-ite-success shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-ite-700'}`} 
-                style={{ width: `${Math.min(100, finalScore)}%` }}
-              ></div>
-            </div>
+
+            {/* Bottom Safe Area Padding for Mobile */}
+            <div className="h-4"></div>
           </div>
         </div>
         
-        <div className="bg-ite-900/80 p-5 border-t border-ite-700 flex justify-between items-center text-[10px] text-slate-500 font-bold px-8">
-           <div className="flex items-center gap-2">
-             <span>{(pScore * 0.3).toFixed(1)}</span>
-             <span className="text-slate-700">+</span>
-             <span>{(eScore * 0.7).toFixed(1)}</span>
-             <Equal size={10} className="text-ite-accent mx-1"/> 
-             <span className="text-slate-300">{weightedSum.toFixed(2)}</span>
+        {/* Footer Info Area + Mobile Close Button */}
+        <div className="bg-ite-900/80 p-5 border-t border-ite-700 flex flex-col gap-4 px-8 pb-8 md:pb-5">
+           <div className="flex justify-between items-center text-[10px] text-slate-500 font-bold">
+              <div className="flex items-center gap-2">
+                <span>{(pScore * 0.3).toFixed(1)}</span>
+                <span className="text-slate-700">+</span>
+                <span>{(eScore * 0.7).toFixed(1)}</span>
+                <Equal size={10} className="text-ite-accent mx-1"/> 
+                <span className="text-slate-300">{weightedSum.toFixed(2)}</span>
+              </div>
+              <div className="flex items-center gap-2 text-ite-accent">
+                <ArrowRight size={12} />
+                <span className="text-sm font-black">{finalScore}</span>
+              </div>
            </div>
-           <div className="flex items-center gap-2 text-ite-accent">
-             <ArrowRight size={12} />
-             <span className="text-sm font-black">{finalScore}</span>
-           </div>
+
+           {/* Mobile-only Close Button (Secondary) */}
+           <button 
+             onClick={onClose}
+             className="md:hidden w-full py-4 rounded-2xl bg-ite-800 text-slate-300 border border-ite-700 font-black text-sm active:scale-95 transition-all"
+           >
+             إغلاق الحاسبة
+           </button>
         </div>
       </div>
     </div>

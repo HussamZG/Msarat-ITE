@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CircleCheck, Lock, Award } from 'lucide-react';
 import { Course } from '../types';
 import { COURSES } from '../data';
@@ -12,18 +12,27 @@ interface CourseCardProps {
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({ course, isSelected, isLocked, creditsIssue, onToggle }) => {
+  const [isShaking, setIsShaking] = useState(false);
   const prereqNames = course.prerequisites?.map(id => COURSES.find(c => c.id === id)?.name).filter(Boolean);
+
+  const handleClick = () => {
+    if (isLocked) {
+      setIsShaking(true);
+      setTimeout(() => setIsShaking(false), 500);
+    }
+    onToggle();
+  };
 
   return (
     <div 
-      onClick={!isLocked ? onToggle : undefined}
-      className={`relative p-5 rounded-3xl border-2 transition-all duration-200 active:scale-[0.98] cursor-pointer select-none touch-manipulation ${
+      onClick={handleClick}
+      className={`relative p-5 rounded-3xl border-2 transition-all duration-200 select-none touch-manipulation cursor-pointer ${
         isLocked 
-          ? 'bg-ite-900/40 border-ite-800/50 opacity-60 cursor-not-allowed' 
+          ? 'bg-ite-900/40 border-ite-800/50 opacity-60' 
           : isSelected 
             ? 'bg-ite-accent/10 border-ite-accent shadow-xl shadow-ite-accent/10' 
             : 'bg-ite-800/80 border-ite-700/50 hover:border-ite-accent/50 shadow-sm'
-      }`}
+      } ${isShaking ? 'animate-shake' : 'active:scale-[0.98]'}`}
     >
       <div className="flex flex-col gap-3">
         <div className="flex justify-between items-start gap-3">
@@ -64,13 +73,13 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, isSelected, isLocked, c
              {prereqNames && prereqNames.length > 0 && (
                <div className="flex items-start gap-1.5 mb-1.5">
                   <Lock size={12} className="mt-0.5 flex-shrink-0" />
-                  <span className="font-medium">يتطلب: {prereqNames.join(' + ')}</span>
+                  <span className="font-medium truncate">يتطلب مواد مسبقة</span>
                </div>
              )}
              {creditsIssue && (
                <div className="flex items-start gap-1.5">
                   <Award size={12} className="mt-0.5 flex-shrink-0" />
-                  <span className="font-medium">يتطلب {creditsIssue} وحدة منجزة</span>
+                  <span className="font-medium">يتطلب {creditsIssue} وحدة</span>
                </div>
              )}
           </div>

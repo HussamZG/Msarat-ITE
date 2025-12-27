@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
-import { Info, SquareCheck, Trash2, AlertTriangle, Heart } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Info, SquareCheck, Trash2, AlertTriangle, Heart, Lock, AlertCircle } from 'lucide-react';
 import { COURSES } from './data';
-import { AcademicYear, CourseCategory } from './types';
+import { AcademicYear, CourseCategory, Course } from './types';
 
 // Components
 import Sidebar from './components/Sidebar';
@@ -11,12 +11,19 @@ import RoadmapView from './components/RoadmapView';
 import GradeCalculator from './components/GradeCalculator';
 import DailyTipModal from './components/DailyTipModal';
 
+interface Toast {
+  message: string;
+  type: 'error' | 'warning' | 'info';
+  visible: boolean;
+}
+
 const App: React.FC = () => {
   const [passedCourses, setPassedCourses] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState<CourseCategory | 'roadmap'>('general');
   const [showTip, setShowTip] = useState(true);
   const [showCalculator, setShowCalculator] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [toast, setToast] = useState<Toast>({ message: '', type: 'info', visible: false });
 
   const totalCredits = useMemo(() => {
     return Array.from(passedCourses).reduce((sum: number, id) => {
@@ -33,13 +40,29 @@ const App: React.FC = () => {
     return { name: AcademicYear.First, progress: totalCredits / 40 };
   }, [totalCredits]);
 
-  const toggleCourse = (courseId: string) => {
+  const showNotification = (message: string, type: 'error' | 'warning' | 'info' = 'info') => {
+    setToast({ message, type, visible: true });
+  };
+
+  useEffect(() => {
+    if (toast.visible) {
+      const timer = setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast.visible]);
+
+  const handleCourseInteraction = (course: Course, isLocked: boolean, lockReason?: string) => {
+    if (isLocked) {
+      showNotification(lockReason || 'هذه المادة مقفلة حالياً', 'warning');
+      return;
+    }
+
     setPassedCourses(prev => {
       const newSet = new Set(prev);
-      if (newSet.has(courseId)) {
-        newSet.delete(courseId);
+      if (newSet.has(course.id)) {
+        newSet.delete(course.id);
       } else {
-        newSet.add(courseId);
+        newSet.add(course.id);
       }
       return newSet;
     });
@@ -47,10 +70,29 @@ const App: React.FC = () => {
 
   const handleSelectAllInTab = () => {
     if (activeTab === 'roadmap') return;
+    const coursesInTab = COURSES.filter(c => c.category === activeTab);
+    
     setPassedCourses(prev => {
       const newSet = new Set(prev);
-      const coursesInTab = COURSES.filter(c => c.category === activeTab);
-      coursesInTab.forEach(c => newSet.add(c.id));
+      let addedCount = 0;
+      coursesInTab.forEach(c => {
+        const prereqsMet = c.prerequisites ? c.prerequisites.every(pId => prev.has(pId)) : true;
+        const creditsMet = c.minCreditsRequired ? totalCredits >= c.minCreditsRequired : true;
+        
+        if (prereqsMet && creditsMet) {
+          if (!newSet.has(c.id)) {
+            newSet.add(c.id);
+            addedCount++;
+          }
+        }
+      });
+
+      if (addedCount > 0) {
+        showNotification(`تمت إضافة ${addedCount} مادة متاحة بنجاح`, 'info');
+      } else {
+        showNotification('لم يتم إضافة مواد جديدة (تحقق من المتطلبات السابقة)', 'warning');
+      }
+      
       return newSet;
     });
   };
@@ -58,21 +100,19 @@ const App: React.FC = () => {
   const confirmReset = () => {
     setPassedCourses(new Set());
     setShowResetConfirm(false);
+    showNotification('تمت إعادة ضبط المسار الأكاديمي', 'info');
   };
 
   return (
     <div className="min-h-screen bg-ite-900 text-slate-100 flex flex-col md:flex-row font-sans selection:bg-ite-accent/30 overflow-y-auto overflow-x-hidden">
       
-      {/* Sidebar / Mobile Header */}
       <Sidebar 
         totalCredits={totalCredits} 
         yearStatus={yearStatus} 
         onOpenCalculator={() => setShowCalculator(true)} 
       />
 
-      {/* Main Content Area */}
       <main className="flex-1 flex flex-col w-full min-w-0 bg-ite-900">
-        {/* Desktop-only Header (64px) */}
         <header className="hidden md:flex h-16 border-b border-ite-700 bg-ite-800/80 backdrop-blur-md items-center px-8 justify-between sticky top-0 z-50">
           <div className="flex items-center gap-2 text-slate-300">
              <Info size={18} className="text-ite-accent" />
@@ -81,8 +121,6 @@ const App: React.FC = () => {
         </header>
 
         <div className="flex flex-col w-full">
-          
-          {/* Navigation Tabs Container - Seamless docking */}
           <div className="sticky top-[72px] md:top-16 z-40 bg-ite-900 border-b border-ite-700/50 px-4 md:px-8 py-3 shadow-lg shadow-black/20">
             <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
           </div>
@@ -95,7 +133,7 @@ const App: React.FC = () => {
                     className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3.5 text-xs md:text-sm font-black rounded-2xl bg-ite-accent/10 text-ite-accent border border-ite-accent/30 active:scale-95 transition-all"
                   >
                     <SquareCheck size={18} />
-                    <span>تحديد كل القسم</span>
+                    <span>تحديد المتاح في القسم</span>
                   </button>
                )}
                <button 
@@ -103,7 +141,7 @@ const App: React.FC = () => {
                   className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3.5 text-xs md:text-sm font-black rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/30 active:scale-95 transition-all"
                 >
                   <Trash2 size={18} />
-                  <span>ضبط المسار</span>
+                  <span>تصفير المسار</span>
                 </button>
             </div>
 
@@ -122,6 +160,16 @@ const App: React.FC = () => {
                       : true;
                       
                     const isLocked = !prereqsMet || !creditsMet;
+                    
+                    let lockReason = '';
+                    if (!prereqsMet) {
+                      const pending = course.prerequisites?.filter(id => !passedCourses.has(id))
+                        .map(id => COURSES.find(c => c.id === id)?.name)
+                        .join(' و ');
+                      lockReason = `يجب إنجاز: ${pending}`;
+                    } else if (!creditsMet) {
+                      lockReason = `تتطلب هذه المادة إنجاز ${course.minCreditsRequired} وحدة (لديك حالياً ${totalCredits})`;
+                    }
 
                     return (
                       <CourseCard 
@@ -130,7 +178,7 @@ const App: React.FC = () => {
                         isSelected={passedCourses.has(course.id)}
                         isLocked={isLocked}
                         creditsIssue={!creditsMet ? course.minCreditsRequired : undefined}
-                        onToggle={() => toggleCourse(course.id)}
+                        onToggle={() => handleCourseInteraction(course, isLocked, lockReason)}
                       />
                     );
                   })}
@@ -138,7 +186,6 @@ const App: React.FC = () => {
               )}
             </section>
 
-            {/* Simple Branded Footer */}
             <footer className="mt-10 py-12 border-t border-ite-800/50 flex flex-col items-center justify-center gap-3">
                <div className="flex items-center gap-2 text-slate-500 text-xs font-bold opacity-80">
                  <span>صنع بكل</span>
@@ -158,7 +205,23 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Modals & UI Overlays */}
+      {/* Toast Notification - Updated positioning for bottom-center on mobile */}
+      {toast.visible && (
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[350] w-[calc(100%-2.5rem)] md:w-max max-w-lg animate-in slide-in-from-bottom-10 fade-in duration-400 ease-out pointer-events-none">
+           <div className={`
+             flex items-center justify-center gap-3 px-6 py-4 rounded-[2rem] border backdrop-blur-2xl shadow-2xl text-center
+             ${toast.type === 'warning' ? 'bg-ite-800/95 border-warning/40 text-warning shadow-warning/20' : 
+               toast.type === 'error' ? 'bg-ite-800/95 border-rose-500/40 text-rose-400 shadow-rose-500/20' : 
+               'bg-ite-800/95 border-ite-accent/40 text-ite-accent shadow-ite-accent/20'}
+           `}>
+              <div className="flex-shrink-0">
+                {toast.type === 'warning' ? <AlertCircle size={22} /> : <Info size={22} />}
+              </div>
+              <span className="text-sm font-black leading-snug">{toast.message}</span>
+           </div>
+        </div>
+      )}
+
       {showTip && <DailyTipModal onClose={() => setShowTip(false)} />}
       {showCalculator && <GradeCalculator onClose={() => setShowCalculator(false)} />}
 

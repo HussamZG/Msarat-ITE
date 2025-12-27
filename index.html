@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Masar ITE - مسار الهندسة المعلوماتية</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
     <script>
       tailwind.config = {
         theme: {
@@ -21,6 +23,17 @@
                 accent: '#3b82f6', 
                 success: '#10b981',
                 warning: '#f59e0b',
+              }
+            },
+            animation: {
+              'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+            },
+            keyframes: {
+              shake: {
+                '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
+                '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
+                '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
+                '40%, 60%': { transform: 'translate3d(4px, 0, 0)' },
               }
             }
           }
@@ -40,7 +53,6 @@
         -webkit-tap-highlight-color: transparent;
       }
       
-      /* Webkit scrollbar for desktop only */
       @media (min-width: 768px) {
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #1e293b; }
@@ -56,10 +68,16 @@
       .fade-in { animation-name: fadeIn; }
       .zoom-in-95 { animation-name: zoomIn95; }
       .slide-in-from-bottom-4 { animation-name: slideInFromBottom4; }
+      .slide-in-from-bottom-8 { animation-name: slideInFromBottom8; }
+      .slide-in-from-bottom-10 { animation-name: slideInFromBottom10; }
+      .slide-in-from-right { animation-name: slideInFromRight; }
 
       @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
       @keyframes zoomIn95 { from { transform: scale(0.95); } to { transform: scale(1); } }
       @keyframes slideInFromBottom4 { from { transform: translateY(1rem); } to { transform: translateY(0); } }
+      @keyframes slideInFromBottom8 { from { transform: translateY(2rem); } to { transform: translateY(0); } }
+      @keyframes slideInFromBottom10 { from { transform: translate(-50%, 3rem); } to { transform: translate(-50%, 0); } }
+      @keyframes slideInFromRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -71,7 +89,8 @@
     "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "html-to-image": "https://esm.sh/html-to-image@^1.11.11"
   }
 }
 </script>
