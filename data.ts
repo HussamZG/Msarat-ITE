@@ -6,12 +6,12 @@ export const COURSES: Course[] = [
   { id: 'GTW301', name: 'مهارات التواصل والكتابة العلمية', credits: 5, category: 'general', prerequisites: ['GCS301'] },
   { id: 'GOE301', name: 'مدخل إلى التعلم الإلكتروني', credits: 4, category: 'general' },
   
-  // سلسلة اللغة الإنكليزية (تعديل الوحدات بناءً على الجدول)
-  { id: 'GEN301', name: 'اللغة الإنكليزية 1', credits: 4, category: 'general', unlocks: ['GEN401'] },
-  { id: 'GEN401', name: 'اللغة الإنكليزية 2', credits: 4, category: 'general', prerequisites: ['GEN301'], unlocks: ['GEN501'] },
-  { id: 'GEN501', name: 'اللغة الإنكليزية 3', credits: 5, category: 'general', prerequisites: ['GEN401'], unlocks: ['GEN502'] },
-  { id: 'GEN502', name: 'اللغة الإنكليزية 4', credits: 5, category: 'general', prerequisites: ['GEN501'], unlocks: ['GEN601'] },
-  { id: 'GEN601', name: 'اللغة الإنكليزية 5', credits: 5, category: 'general', prerequisites: ['GEN502'] },
+  // سلسلة اللغة الإنكليزية (تعديل الوحدات: جميعها 3 وحدات)
+  { id: 'GEN301', name: 'اللغة الإنكليزية 1', credits: 3, category: 'general', unlocks: ['GEN401'] },
+  { id: 'GEN401', name: 'اللغة الإنكليزية 2', credits: 3, category: 'general', prerequisites: ['GEN301'], unlocks: ['GEN501'] },
+  { id: 'GEN501', name: 'اللغة الإنكليزية 3', credits: 3, category: 'general', prerequisites: ['GEN401'], unlocks: ['GEN502'] },
+  { id: 'GEN502', name: 'اللغة الإنكليزية 4', credits: 3, category: 'general', prerequisites: ['GEN501'], unlocks: ['GEN601'] },
+  { id: 'GEN601', name: 'اللغة الإنكليزية 5', credits: 3, category: 'general', prerequisites: ['GEN502'] },
 
   // الإدارة والمحاسبة
   { id: 'GMN401', name: 'أساسيات الإدارة', credits: 4, category: 'general', unlocks: ['GAC501'] },
