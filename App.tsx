@@ -64,6 +64,7 @@ const App: React.FC = () => {
     }, 0);
   }, [passedCourses]);
 
+  // تحديث القيم بناءً على جدول الصورة: الثانية(40)، الثالثة(100)، الرابعة(160)، الخامسة(220)
   const yearStatus = useMemo(() => {
     if (totalCredits >= 220) return { name: AcademicYear.Fifth, progress: Math.min(1, (totalCredits - 220) / (300 - 220)) };
     if (totalCredits >= 160) return { name: AcademicYear.Fourth, progress: (totalCredits - 160) / (220 - 160) };
